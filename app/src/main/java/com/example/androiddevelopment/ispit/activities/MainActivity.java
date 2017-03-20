@@ -112,35 +112,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void addItem() throws SQLException {
+    private void addKontakt() throws SQLException {
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_kontakt);
 
-        final EditText glumacIme = (EditText) dialog.findViewById(R.id.kontakt_ime);
+        final EditText kontaktIme = (EditText) dialog.findViewById(R.id.kontakt_ime);
+        final EditText kontaktPrezime = (EditText) dialog.findViewById(R.id.kontakt_prezime);
 
         Button ok = (Button) dialog.findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String ime = glumacIme.getText().toString();
+                String ime = kontaktIme.getText().toString();
+                String prezime = kontaktPrezime.getText().toString();
 
                 Kontakt glumac = new Kontakt();
                 glumac.setmIme(ime);
+                glumac.setmPrezime(prezime);
 
                 try {
                     getDatabaseHelper().getKontaktDao().create(glumac);
                     refresh();
 
-                    boolean toast = prefs.getBoolean(NOTIF_TOAST, false);
-                    boolean status = prefs.getBoolean(NOTIF_STATUS, false);
-
-                    if (toast){
-                        Toast.makeText(MainActivity.this, "Dodat novi glumac", Toast.LENGTH_SHORT).show();
-                    }
-
-                    if (status){
-                        showStatusMesage("Added new actor");
-                    }
+                    showStatusMesage("Dodat novi kontakt");
 
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -194,13 +188,25 @@ public class MainActivity extends AppCompatActivity {
         // notificationID allows you to update the notification later on.
         mNotificationManager.notify(1, mBuilder.build());
     }
+    private void showMessage(String message){
+        boolean toast = prefs.getBoolean(NOTIF_TOAST, false);
+        boolean status = prefs.getBoolean(NOTIF_STATUS, false);
+
+        if (toast){
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
+
+        if (status){
+            showStatusMesage(message);
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_main_add:
                 Toast.makeText(this, "Action Dodaj executed.", Toast.LENGTH_SHORT).show();
                 try {
-                    addItem();
+                    addKontakt();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

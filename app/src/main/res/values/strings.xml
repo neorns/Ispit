@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Ispit</string>
+
+    <string-array name="telefon_tip">
+        <item>Kucni</item>
+        <item>Mobilni</item>
+        <item>Poslovni</item>
+    </string-array>
 </resources>
