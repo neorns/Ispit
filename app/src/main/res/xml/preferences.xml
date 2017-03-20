@@ -8,14 +8,10 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="notif_toast"
-            android:summary="Prikazi obavestenje kao Toast"
+            android:summary="Prikazi obavestenja kao Toast (u suprotnom kao notifikacije)"
             android:title="Toast obavestenje" />
 
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="notif_statis"
-            android:summary="Prikazi obavestenje kao notifikaciju"
-            android:title="Notifikacija" />
+
 
     </PreferenceCategory>
 

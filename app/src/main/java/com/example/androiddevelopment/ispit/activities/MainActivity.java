@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String KONTAKT_KEY = "KONTAKT_KEY";
     public static String NOTIF_TOAST = "notif_toast";
-    public static String NOTIF_STATUS = "notif_status";
+
 
     // Container Activity must implement this interface
     public interface OnKontaktSelectedListener {
@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
         final EditText kontaktIme = (EditText) dialog.findViewById(R.id.kontakt_ime);
         final EditText kontaktPrezime = (EditText) dialog.findViewById(R.id.kontakt_prezime);
+        final EditText kontaktAdresa = (EditText) dialog.findViewById(R.id.kontakt_adresa);
 
         Button ok = (Button) dialog.findViewById(R.id.ok);
         ok.setOnClickListener(new View.OnClickListener() {
@@ -125,13 +126,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String ime = kontaktIme.getText().toString();
                 String prezime = kontaktPrezime.getText().toString();
+                String adresa = kontaktAdresa.getText().toString();
 
-                Kontakt glumac = new Kontakt();
-                glumac.setmIme(ime);
-                glumac.setmPrezime(prezime);
+                Kontakt kontakt = new Kontakt();
+                kontakt.setmIme(ime);
+                kontakt.setmPrezime(prezime);
+                kontakt.setmAdresa(adresa);
 
                 try {
-                    getDatabaseHelper().getKontaktDao().create(glumac);
+                    getDatabaseHelper().getKontaktDao().create(kontakt);
                     refresh();
 
                     showStatusMesage("Dodat novi kontakt");
@@ -179,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager mNotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setSmallIcon(R.drawable.ic_notifikacija);
-        mBuilder.setContentTitle("Pripremni test");
+        mBuilder.setContentTitle("Ispitni zadatak");
         mBuilder.setContentText(message);
 
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_add);
@@ -190,13 +193,11 @@ public class MainActivity extends AppCompatActivity {
     }
     private void showMessage(String message){
         boolean toast = prefs.getBoolean(NOTIF_TOAST, false);
-        boolean status = prefs.getBoolean(NOTIF_STATUS, false);
+        //boolean status = prefs.getBoolean(NOTIF_STATUS, false);
 
         if (toast){
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        }
-
-        if (status){
+        } else {
             showStatusMesage(message);
         }
     }

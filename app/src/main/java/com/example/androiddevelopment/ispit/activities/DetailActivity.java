@@ -34,7 +34,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.example.androiddevelopment.ispit.activities.MainActivity.NOTIF_STATUS;
+
 import static com.example.androiddevelopment.ispit.activities.MainActivity.NOTIF_TOAST;
 
 /**
@@ -46,6 +46,7 @@ public class DetailActivity  extends AppCompatActivity {
     private Kontakt kontakt;
     private EditText ime;
     private EditText prezime;
+    private EditText adresa;
     private SharedPreferences prefs;
 
     @Override
@@ -73,6 +74,8 @@ public class DetailActivity  extends AppCompatActivity {
             ime.setText(kontakt.getmIme());
             prezime =(EditText) this.findViewById(R.id.et_prezime);
             prezime.setText(kontakt.getmPrezime());
+            adresa =(EditText) this.findViewById(R.id.et_adresa);
+            adresa.setText(kontakt.getmAdresa());
 
 
         } catch (SQLException e) {
@@ -109,7 +112,7 @@ public class DetailActivity  extends AppCompatActivity {
         NotificationManager mNotificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setSmallIcon(R.drawable.ic_notifikacija);
-        mBuilder.setContentTitle("Pripremni test");
+        mBuilder.setContentTitle("Ispitni zadatak");
         mBuilder.setContentText(message);
 
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_add);
@@ -122,13 +125,11 @@ public class DetailActivity  extends AppCompatActivity {
     private void showMessage(String message){
 
         boolean toast = prefs.getBoolean(NOTIF_TOAST, false);
-        boolean status = prefs.getBoolean(NOTIF_STATUS, false);
+
 
         if (toast){
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        }
-
-        if (status){
+        } else {
             showStatusMesage(message);
         }
     }
@@ -157,7 +158,7 @@ public class DetailActivity  extends AppCompatActivity {
                 //POKUPITE INFORMACIJE SA EDIT POLJA
                 kontakt.setmIme(ime.getText().toString());
                 kontakt.setmPrezime(prezime.getText().toString());
-
+                kontakt.setmAdresa(adresa.getText().toString());
 
                 try {
                     getDatabaseHelper().getKontaktDao().update(kontakt);
