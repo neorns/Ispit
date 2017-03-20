@@ -3,6 +3,7 @@ package com.example.androiddevelopment.ispit.activities;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -30,11 +32,15 @@ import com.example.androiddevelopment.ispit.db.DatabaseHelper;
 import com.example.androiddevelopment.ispit.db.Kontakt;
 import com.example.androiddevelopment.ispit.db.Telefon;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
 import java.util.List;
 
 
+import static android.content.Intent.ACTION_PICK;
+import static android.provider.MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI;
 import static com.example.androiddevelopment.ispit.activities.MainActivity.NOTIF_TOAST;
 
 /**
@@ -48,7 +54,9 @@ public class DetailActivity  extends AppCompatActivity {
     private EditText prezime;
     private EditText adresa;
     private SharedPreferences prefs;
-
+    private String image;
+    private ImageView imageView;
+    private static final int GALLERY_REQUEST = 9391;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +86,18 @@ public class DetailActivity  extends AppCompatActivity {
             adresa.setText(kontakt.getmAdresa());
 
 
+            imageView = (ImageView) findViewById(R.id.image);
+
+            findViewById(R.id.izaberi).setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+
+                    Intent intent = new Intent();
+                    //intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Izaberi sliku"), GALLERY_REQUEST);
+                }
+            });
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -106,6 +126,35 @@ public class DetailActivity  extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null) {
+            image = data.getData().toString();
+            kontakt.setmSlika(image);
+            try {
+                getDatabaseHelper().getKontaktDao().update(kontakt);
+
+                showMessage("Izmena kontakta");
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            loadImage();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void loadImage() {
+
+        Picasso.with(this).load(image).fit().centerInside().into(imageView, new Callback.EmptyCallback() {
+            @Override public void onSuccess() {
+                // Index 0 is the image view.
+
+            }
+        });
     }
 
     private void showStatusMesage(String message){
