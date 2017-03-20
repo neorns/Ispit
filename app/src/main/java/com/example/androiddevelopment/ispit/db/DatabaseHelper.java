@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     //Dajemo ime bazi
-    private static final String DATABASE_NAME    = "glumci_filmovi.db";
+    private static final String DATABASE_NAME    = "kontakti.db";
 
     //i pocetnu verziju baze. Obicno krece od 1
     private static final int    DATABASE_VERSION = 1;
